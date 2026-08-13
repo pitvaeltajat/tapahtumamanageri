@@ -1,13 +1,4 @@
 {
 	"$schema": "https://openapi.vercel.sh/vercel.json",
-	"version": 2,
-	"buildCommand": "npm run build",
-	"builds": [
-		{
-			"src": "server/dist/index.js",
-			"use": "@vercel/node",
-			"config": { "includeFiles": "client/dist/**" }
-		}
-	],
-	"routes": [{ "src": "/(.*)", "dest": "server/dist/index.js" }]
+	"buildCommand": "npm run build"
 }
