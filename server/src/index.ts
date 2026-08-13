@@ -1,5 +1,8 @@
 import express from 'express';
 import cors from 'cors';
+import { existsSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { dirname, resolve } from 'node:path';
 import { config } from './config.js';
 import { getSession, requireAuth } from './lib/auth.js';
 import * as db from './lib/dynamodb.js';
@@ -15,6 +18,15 @@ app.use(
 	}),
 );
 app.use(express.json());
+
+// Serve the built React client (client/dist) when it exists. In development the
+// Vite dev server proxies /api here instead.
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const clientDist = resolve(__dirname, '../../client/dist');
+const hasClientDist = existsSync(clientDist);
+if (hasClientDist) {
+	app.use(express.static(clientDist));
+}
 
 /** POST /api/auth - verify the admin password and create a session. */
 app.post('/api/auth', async (req, res) => {
@@ -181,6 +193,26 @@ app.delete('/api/events/:id', requireAuth, async (req, res) => {
 	}
 });
 
-app.listen(config.port, () => {
-	console.log(`Server listening on http://localhost:${config.port}`);
-});
+// SPA fallback: serve index.html for any non-API GET that isn't a real file,
+// so client-side routes (/, /events, /iframe, ...) work after a refresh.
+if (hasClientDist) {
+	app.get('*', (req, res) => {
+		if (req.path.startsWith('/api')) {
+			res.status(404).json({ error: 'Not found' });
+			return;
+		}
+		res.sendFile(resolve(clientDist, 'index.html'));
+	});
+}
+
+// Start the server when run directly (npm run dev / npm start), but export the
+// Express app so it can be served as a Vercel serverless function (vercel.json).
+export default app;
+
+// `require.main === module` is unreliable under some bundlers, so gate on a
+// marker that Vercel sets. When deployed, the handler is invoked by Vercel.
+if (process.env.VERCEL !== '1') {
+	app.listen(config.port, () => {
+		console.log(`Server listening on http://localhost:${config.port}`);
+	});
+}

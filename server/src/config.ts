@@ -27,5 +27,6 @@ export const config = {
 	awsRegion: process.env.AWS_REGION ?? 'eu-north-1',
 	dynamoTable: process.env.DYNAMODB_TABLE ?? 'partio-tapahtumat',
 	googleServiceAccountKey: resolveOptionalPath(process.env.GOOGLE_SERVICE_ACCOUNT_KEY),
+	googleServiceAccountJSON: process.env.GOOGLE_SERVICE_ACCOUNT_JSON,
 	googleCalendarId: process.env.GOOGLE_CALENDAR_ID,
 };

@@ -4,7 +4,7 @@ import { config } from '../config.js';
 import type { EventData } from '../types.js';
 
 function assertCalendarConfigured() {
-	if (!config.googleServiceAccountKey) {
+	if (!config.googleServiceAccountKey && !config.googleServiceAccountJSON) {
 		throw new Error('GOOGLE_SERVICE_ACCOUNT_KEY is not set. Google Calendar sync is disabled.');
 	}
 	if (!config.googleCalendarId) {
@@ -29,8 +29,14 @@ function getCalendar() {
 	if (calendar) return calendar;
 	assertCalendarConfigured();
 
-	const keyPath = config.googleServiceAccountKey;
-	const credentials = JSON.parse(readFileSync(keyPath!, 'utf8'));
+	let credentials: { client_email: string; private_key: string };
+	if (config.googleServiceAccountJSON) {
+		// On Vercel the key is provided inline as a JSON string.
+		credentials = JSON.parse(config.googleServiceAccountJSON);
+	} else {
+		const keyPath = config.googleServiceAccountKey!;
+		credentials = JSON.parse(readFileSync(keyPath, 'utf8'));
+	}
 
 	const auth = new google.auth.JWT({
 		email: credentials.client_email,
