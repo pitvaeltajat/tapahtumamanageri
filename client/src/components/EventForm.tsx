@@ -124,6 +124,8 @@ export default function EventForm({ initial, submitLabel, onSubmit }: EventFormP
 	}, [defaultDateRange]);
 
 	// Initialize flatpickr time pickers (24-hour format, no AM/PM).
+	// The time input fields are always rendered (just hidden via CSS when not
+	// applicable), so flatpickr can attach once on mount.
 	useEffect(() => {
 		if (startTimeRef.current) {
 			fpStartTime.current = flatpickr(startTimeRef.current, {
@@ -226,18 +228,18 @@ export default function EventForm({ initial, submitLabel, onSubmit }: EventFormP
 				</label>
 			)}
 
-			{sameDay && !form.allDay && (
-				<div className='form-row'>
-					<label className='form-row-item'>
-						Alkaa klo
-						<input ref={startTimeRef} type='text' placeholder='--:--' readOnly />
-					</label>
-					<label className='form-row-item'>
-						Loppuu klo
-						<input ref={endTimeRef} type='text' placeholder='--:--' readOnly />
-					</label>
-				</div>
-			)}
+			{/* Time inputs are always rendered (hidden via CSS when not sameDay or allDay)
+			    so flatpickr can initialize once on mount. */}
+			<div className={`form-row${sameDay && !form.allDay ? '' : ' time-row-hidden'}`}>
+				<label className='form-row-item'>
+					Alkaa klo
+					<input ref={startTimeRef} type='text' placeholder='--:--' />
+				</label>
+				<label className='form-row-item'>
+					Loppuu klo
+					<input ref={endTimeRef} type='text' placeholder='--:--' />
+				</label>
+			</div>
 
 			<label>
 				Kenelle?
