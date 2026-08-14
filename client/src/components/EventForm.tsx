@@ -19,6 +19,7 @@ const emptyForm: EventData = {
 	audience: '',
 	registration: '',
 	additionalInfo: '',
+	allDay: false,
 };
 
 function pad(value: number) {
@@ -129,6 +130,17 @@ export default function EventForm({ initial, submitLabel, onSubmit }: EventFormP
 		update('endsAt', makeLocalDateTime(date, value));
 	}
 
+	function handleAllDayChange(checked: boolean) {
+		update('allDay', checked);
+		if (checked) {
+			// Full-day: use date-only values (no time).
+			const startDateValue = parseIsoDateTime(form.startsAt).date;
+			const endDateValue = parseIsoDateTime(form.endsAt).date;
+			if (startDateValue) update('startsAt', startDateValue);
+			if (endDateValue) update('endsAt', endDateValue);
+		}
+	}
+
 	async function handleSubmit(e: FormEvent) {
 		e.preventDefault();
 		setError(null);
@@ -159,7 +171,16 @@ export default function EventForm({ initial, submitLabel, onSubmit }: EventFormP
 				<input ref={dateInputRef} type='text' placeholder='Valitse ajanjakso' />
 			</label>
 
-			{sameDay && (
+			<label className='all-day-toggle'>
+				<input
+					type='checkbox'
+					checked={form.allDay}
+					onChange={(e) => handleAllDayChange(e.target.checked)}
+				/>
+				Koko päivä (ei alkamis- ja päättymisaikaa)
+			</label>
+
+			{sameDay && !form.allDay && (
 				<div className='form-row'>
 					<label className='form-row-item'>
 						Alkaa klo

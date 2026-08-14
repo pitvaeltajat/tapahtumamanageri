@@ -52,30 +52,53 @@ function getCalendar() {
 	return calendar;
 }
 
+// Format the wall-clock parts of a Helsinki-local time so we can compute the
+// correct UTC instant via Intl (handles DST transitions accurately).
+const helsinkiFormatter = new Intl.DateTimeFormat('en-US', {
+	timeZone: 'Europe/Helsinki',
+	year: 'numeric',
+	month: '2-digit',
+	day: '2-digit',
+	hour: '2-digit',
+	minute: '2-digit',
+	second: '2-digit',
+	hourCycle: 'h23',
+});
+
+/** Get the UTC ISO string for a Europe/Helsinki wall-clock time. */
+function helsinkiToIso(year: number, month: number, day: number, hour = 0, minute = 0): string {
+	// The wall-clock time we want, expressed as if it were UTC.
+	const asUtc = Date.UTC(year, month - 1, day, hour, minute, 0);
+	// Convert that back to Helsinki parts (no DST shift applied yet).
+	const parts = helsinkiFormatter.formatToParts(new Date(asUtc));
+	const get = (type: string) => parseInt(parts.find((p) => p.type === type)?.value ?? '0', 10);
+	const hYear = get('year');
+	const hMonth = get('month');
+	const hDay = get('day');
+	const hHour = get('hour');
+	const hMin = get('minute');
+	// Difference between the UTC we guessed and the Helsinki wall-clock gives
+	// the offset. Subtract it to get the true UTC instant.
+	const offsetMs = Date.UTC(hYear, hMonth - 1, hDay, hHour, hMin) - asUtc;
+	return new Date(asUtc - offsetMs).toISOString();
+}
+
 /** Normalize a stored event timestamp to a valid RFC3339 timestamp for Google Calendar. */
 function toGoogleDateTime(value: string): string {
 	if (!value) {
 		throw new Error('Missing event date/time');
 	}
 
-	const parsed = new Date(value);
-	if (!Number.isNaN(parsed.getTime())) {
-		return parsed.toISOString();
-	}
-
+	// The stored value is a local (Europe/Helsinki) wall-clock time like
+	// "2026-08-14T10:00" or "2026-08-14". Interpret it in Helsinki time so the
+	// resulting UTC instant is correct regardless of the server's timezone.
 	const match = value.match(/^(\d{4})-(\d{2})-(\d{2})(?:T(\d{2}):(\d{2}))?$/);
 	if (!match) {
 		throw new Error(`Unsupported event date/time: ${value}`);
 	}
 
 	const [, year, month, day, hours = '00', minutes = '00'] = match;
-	const normalized = new Date(Number(year), Number(month) - 1, Number(day), Number(hours), Number(minutes));
-
-	if (Number.isNaN(normalized.getTime())) {
-		throw new Error(`Unsupported event date/time: ${value}`);
-	}
-
-	return normalized.toISOString();
+	return helsinkiToIso(Number(year), Number(month), Number(day), Number(hours), Number(minutes));
 }
 
 function formatDateOnly(date: Date): string {
@@ -108,20 +131,23 @@ function isMultiDayEvent(data: EventData): boolean {
 
 /** Build a Google Calendar event resource from our event data. */
 function buildEventResource(data: EventData) {
-	if (isMultiDayEvent(data)) {
+	const description = [
+		data.description,
+		data.audience ? `Kenelle: ${data.audience}` : '',
+		data.registration ? `Ilmoittautuminen: ${data.registration}` : '',
+		data.additionalInfo ? `Lisätiedot: ${data.additionalInfo}` : '',
+	]
+		.filter(Boolean)
+		.join('\n\n');
+
+	// All-day events (single or multi-day) use date-only fields.
+	if (data.allDay || isMultiDayEvent(data)) {
 		const endExclusive = new Date(`${normalizeDateString(data.endsAt)}T00:00:00`);
 		endExclusive.setDate(endExclusive.getDate() + 1);
 
 		return {
 			summary: data.title,
-			description: [
-				data.description,
-				data.audience ? `Kenelle: ${data.audience}` : '',
-				data.registration ? `Ilmoittautuminen: ${data.registration}` : '',
-				data.additionalInfo ? `Lisätiedot: ${data.additionalInfo}` : '',
-			]
-				.filter(Boolean)
-				.join('\n\n'),
+			description,
 			start: { date: normalizeDateString(data.startsAt) },
 			end: { date: formatDateOnly(endExclusive) },
 		};
@@ -129,16 +155,9 @@ function buildEventResource(data: EventData) {
 
 	return {
 		summary: data.title,
-		description: [
-			data.description,
-			data.audience ? `Kenelle: ${data.audience}` : '',
-			data.registration ? `Ilmoittautuminen: ${data.registration}` : '',
-			data.additionalInfo ? `Lisätiedot: ${data.additionalInfo}` : '',
-		]
-			.filter(Boolean)
-			.join('\n\n'),
-		start: { dateTime: toGoogleDateTime(data.startsAt) },
-		end: { dateTime: toGoogleDateTime(data.endsAt) },
+		description,
+		start: { dateTime: toGoogleDateTime(data.startsAt), timeZone: 'Europe/Helsinki' },
+		end: { dateTime: toGoogleDateTime(data.endsAt), timeZone: 'Europe/Helsinki' },
 	};
 }
 

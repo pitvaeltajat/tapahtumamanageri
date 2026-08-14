@@ -1,11 +1,5 @@
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
-import {
-	DynamoDBDocumentClient,
-	DeleteCommand,
-	GetCommand,
-	PutCommand,
-	ScanCommand,
-} from '@aws-sdk/lib-dynamodb';
+import { DynamoDBDocumentClient, DeleteCommand, GetCommand, PutCommand, ScanCommand } from '@aws-sdk/lib-dynamodb';
 import { randomUUID } from 'node:crypto';
 import { config } from '../config.js';
 import type { Event, EventData } from '../types.js';
@@ -27,6 +21,7 @@ function toEvent(item: Record<string, unknown>): Event {
 		audience: (item.audience as string) ?? '',
 		registration: (item.registration as string) ?? '',
 		additionalInfo: (item.additionalInfo as string) ?? '',
+		allDay: (item.allDay as boolean) ?? false,
 		createdAt: item.createdAt as string,
 		updatedAt: item.updatedAt as string,
 		googleEventId: item.googleEventId as string | undefined,

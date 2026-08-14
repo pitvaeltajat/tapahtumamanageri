@@ -7,6 +7,7 @@ export interface EventData {
 	audience: string;
 	registration: string;
 	additionalInfo: string;
+	allDay: boolean;
 }
 
 export interface Event extends EventData {

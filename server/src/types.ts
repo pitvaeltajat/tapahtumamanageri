@@ -17,6 +17,8 @@ export interface EventData {
 	registration: string;
 	/** Lisätiedot (additional info) */
 	additionalInfo: string;
+	/** True if this is an all-day event (no start/end time). */
+	allDay: boolean;
 }
 
 /** A stored event: EventData plus metadata. */

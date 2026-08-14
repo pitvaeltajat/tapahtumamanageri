@@ -9,6 +9,7 @@ export const eventSchema = z.object({
 	audience: z.string().default(''),
 	registration: z.string().default(''),
 	additionalInfo: z.string().default(''),
+	allDay: z.boolean().default(false),
 });
 
 export type EventInput = z.infer<typeof eventSchema>;
