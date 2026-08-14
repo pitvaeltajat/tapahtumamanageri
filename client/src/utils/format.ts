@@ -13,7 +13,7 @@ export function renderTextWithLinks(value: string): Array<string | { href: strin
 	if (!value) return [];
 
 	const urlRegex =
-		/(https?:\/\/[^\s<>"]+|(?:www\.)?[a-z0-9-]+(?:\.[a-z0-9-]+)+(?:[/?#][^\s<>"]*)?|[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,})/gi;
+		/(https?:\/\/[^\s<>"]+|[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}|(?:www\.)?[a-z0-9-]+(?:\.[a-z0-9-]+)+(?:[/?#][^\s<>"]*)?)/gi;
 	const parts: Array<string | { href: string; label: string }> = [];
 	let lastIndex = 0;
 
