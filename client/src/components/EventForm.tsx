@@ -184,11 +184,11 @@ export default function EventForm({ initial, submitLabel, onSubmit }: EventFormP
 				<div className='form-row'>
 					<label className='form-row-item'>
 						Alkaa klo
-						<input type='time' value={startTime} onChange={(e) => handleStartTimeChange(e.target.value)} required />
+						<input type='time' lang='fi-FI' value={startTime} onChange={(e) => handleStartTimeChange(e.target.value)} required />
 					</label>
 					<label className='form-row-item'>
 						Loppuu klo
-						<input type='time' value={endTime} onChange={(e) => handleEndTimeChange(e.target.value)} required />
+						<input type='time' lang='fi-FI' value={endTime} onChange={(e) => handleEndTimeChange(e.target.value)} required />
 					</label>
 				</div>
 			)}
