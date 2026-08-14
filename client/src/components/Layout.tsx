@@ -35,7 +35,9 @@ export default function Layout() {
 						<Link to='/events' onClick={() => setNavOpen(false)}>
 							Tapahtumat
 						</Link>
-						{isLoggedIn ? (
+						{isLoggedIn === null ? (
+							<span className='nav-placeholder' aria-hidden='true' />
+						) : isLoggedIn ? (
 							<button
 								className='link-button'
 								onClick={() => {
