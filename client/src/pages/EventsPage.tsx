@@ -28,9 +28,7 @@ export default function EventsPage() {
 			.finally(() => setLoading(false));
 	}, []);
 
-	const visibleEvents = showIncomingOnly
-		? events.filter((event) => new Date(event.startsAt) > new Date())
-		: events;
+	const visibleEvents = showIncomingOnly ? events.filter((event) => new Date(event.startsAt) > new Date()) : events;
 
 	async function handleDelete(event: Event) {
 		if (!window.confirm(`Poistetaanko tapahtuma "${event.title}"?`)) return;
@@ -49,11 +47,7 @@ export default function EventsPage() {
 			<h1>Tapahtumat</h1>
 			{error && <p className='error'>{error}</p>}
 			<label className='filter-toggle'>
-				<input
-					type='checkbox'
-					checked={showIncomingOnly}
-					onChange={(e) => setShowIncomingOnly(e.target.checked)}
-				/>
+				<input type='checkbox' checked={showIncomingOnly} onChange={(e) => setShowIncomingOnly(e.target.checked)} />
 				Näytä vain tulevat tapahtumat
 			</label>
 			{visibleEvents.length === 0 ? (

@@ -33,6 +33,10 @@ function getCalendar() {
 	if (config.googleServiceAccountJSON) {
 		// On Vercel the key is provided inline as a JSON string.
 		credentials = JSON.parse(config.googleServiceAccountJSON);
+	} else if (config.googleServiceAccountKey?.trim().startsWith('{')) {
+		// Defensive: allow GOOGLE_SERVICE_ACCOUNT_KEY to contain the JSON
+		// contents directly instead of a file path.
+		credentials = JSON.parse(config.googleServiceAccountKey);
 	} else {
 		const keyPath = config.googleServiceAccountKey!;
 		credentials = JSON.parse(readFileSync(keyPath, 'utf8'));
