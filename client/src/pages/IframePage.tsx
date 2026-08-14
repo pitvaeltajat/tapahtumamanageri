@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { api } from '../api';
 import type { Event } from '../types';
-import { formatEventDateRange, renderTextWithLinks } from '../utils/format';
+import { formatIframeEventDate, renderTextWithLinks } from '../utils/format';
 
 /**
  * Public page intended for embedding in an iframe on another site.
@@ -59,7 +59,7 @@ export default function IframePage() {
 						<li key={event.id} className='iframe-event'>
 							<div className='iframe-body'>
 								<div className='iframe-title'>{event.title}</div>
-								<div className='iframe-date'>{formatEventDateRange(event.startsAt, event.endsAt)}</div>
+								<div className='iframe-date'>{formatIframeEventDate(event.startsAt, event.endsAt, event.allDay)}</div>
 								{event.description && (
 									<div>
 										{renderTextWithLinks(event.description).map((part, index) =>

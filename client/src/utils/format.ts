@@ -60,6 +60,15 @@ export function formatEventDateRange(startsAt: string, endsAt: string): string {
 		return `${startsAt} - ${endsAt}`;
 	}
 
+	const sameDay =
+		start.getFullYear() === end.getFullYear() &&
+		start.getMonth() === end.getMonth() &&
+		start.getDate() === end.getDate();
+
+	if (sameDay) {
+		return formatDate(startsAt);
+	}
+
 	const sameYear = start.getFullYear() === end.getFullYear();
 	const sameMonth = sameYear && start.getMonth() === end.getMonth();
 
@@ -78,4 +87,38 @@ export function formatEventDateRange(startsAt: string, endsAt: string): string {
 		: `${end.getDate()}.${end.getMonth() + 1}.${end.getFullYear()}`;
 
 	return `${startText}-${endText}`;
+}
+
+/**
+ * Format an event's date range for the iframe view.
+ *
+ * - Single-day allDay events: "30.8.2026"
+ * - Single-day timed events: "30.8.2026 klo 10:00–12:00"
+ * - Multi-day events: range as before (no times)
+ */
+export function formatIframeEventDate(startsAt: string, endsAt: string, allDay: boolean): string {
+	const start = new Date(startsAt);
+	const end = new Date(endsAt);
+
+	if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) {
+		return `${startsAt} - ${endsAt}`;
+	}
+
+	const sameDay =
+		start.getFullYear() === end.getFullYear() &&
+		start.getMonth() === end.getMonth() &&
+		start.getDate() === end.getDate();
+
+	if (allDay && sameDay) {
+		return formatDate(startsAt);
+	}
+
+	if (!allDay && sameDay) {
+		const dateStr = formatDate(startsAt);
+		const startTime = start.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
+		const endTime = end.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' });
+		return `${dateStr} klo ${startTime}\u2013${endTime}`;
+	}
+
+	return formatEventDateRange(startsAt, endsAt);
 }
