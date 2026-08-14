@@ -22,7 +22,6 @@ function resolveOptionalPath(value: string | undefined): string | undefined {
 
 export const config = {
 	port: Number(process.env.PORT ?? 4000),
-	adminPassword: required('ADMIN_PASSWORD'),
 	sessionSecret: required('SESSION_SECRET'),
 	awsRegion: process.env.AWS_REGION ?? 'eu-north-1',
 	dynamoTable: process.env.DYNAMODB_TABLE ?? 'partio-tapahtumat',

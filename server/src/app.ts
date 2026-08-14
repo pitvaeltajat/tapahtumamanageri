@@ -3,7 +3,6 @@ import cors from 'cors';
 import { existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
-import { config } from './config.js';
 import { getSession, requireAuth } from './lib/auth.js';
 import * as db from './lib/dynamodb.js';
 import * as calendar from './lib/calendar.js';
@@ -46,18 +45,17 @@ export function createApp(): express.Express {
 		}
 
 		try {
-			// Try to verify against a hash stored in DynamoDB. If no hash is present,
-			// fall back to the existing ADMIN_PASSWORD env value for bootstrapping.
+			// Verify against the bcrypt hash stored in DynamoDB. There is no
+			// cleartext password anywhere in the app or environment.
 			const storedHash = await db.getAdminPasswordHash();
-			let valid = false;
-			if (storedHash) {
-				// Lazy import bcrypt to avoid adding it to startup if unused.
-				const bcrypt = await import('bcrypt');
-				valid = await bcrypt.compare(password, storedHash);
-			} else {
-				// Fallback to plain-text env password only when no hash is stored.
-				valid = password === config.adminPassword;
+			if (!storedHash) {
+				res.status(500).json({ error: 'Admin-salasanaa ei ole asetettu' });
+				return;
 			}
+
+			// Lazy import bcrypt to avoid adding it to startup if unused.
+			const bcrypt = await import('bcrypt');
+			const valid = await bcrypt.compare(password, storedHash);
 
 			if (!valid) {
 				res.status(401).json({ error: 'Väärä salasana' });
