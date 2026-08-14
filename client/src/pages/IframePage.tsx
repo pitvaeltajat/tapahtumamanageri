@@ -51,7 +51,6 @@ export default function IframePage() {
 
 	return (
 		<div className='iframe-page' ref={rootRef}>
-			<h1>Tapahtumat</h1>
 			{events.length === 0 ? (
 				<p>Ei tulevia tapahtumia.</p>
 			) : (
