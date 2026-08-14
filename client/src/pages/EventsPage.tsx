@@ -9,6 +9,7 @@ export default function EventsPage() {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	const [showIncomingOnly, setShowIncomingOnly] = useState(false);
 	const navigate = useNavigate();
 
 	useEffect(() => {
@@ -27,6 +28,10 @@ export default function EventsPage() {
 			.finally(() => setLoading(false));
 	}, []);
 
+	const visibleEvents = showIncomingOnly
+		? events.filter((event) => new Date(event.startsAt) > new Date())
+		: events;
+
 	async function handleDelete(event: Event) {
 		if (!window.confirm(`Poistetaanko tapahtuma "${event.title}"?`)) return;
 		try {
@@ -43,11 +48,19 @@ export default function EventsPage() {
 		<div className='page'>
 			<h1>Tapahtumat</h1>
 			{error && <p className='error'>{error}</p>}
-			{events.length === 0 ? (
+			<label className='filter-toggle'>
+				<input
+					type='checkbox'
+					checked={showIncomingOnly}
+					onChange={(e) => setShowIncomingOnly(e.target.checked)}
+				/>
+				Näytä vain tulevat tapahtumat
+			</label>
+			{visibleEvents.length === 0 ? (
 				<p>Ei tapahtumia.</p>
 			) : (
 				<ul className='event-list'>
-					{events.map((event) => (
+					{visibleEvents.map((event) => (
 						<li key={event.id} className='event-card'>
 							<div className='event-card-main'>
 								<h2>{event.title}</h2>
