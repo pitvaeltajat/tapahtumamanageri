@@ -31,7 +31,6 @@ export function createApp(): express.Express {
 		resolve(process.cwd(), '../../client/dist'),
 	];
 	const clientDist = candidates.find((p) => existsSync(p));
-	const hasClientDist = Boolean(clientDist);
 	if (clientDist) {
 		app.use(express.static(clientDist));
 	}

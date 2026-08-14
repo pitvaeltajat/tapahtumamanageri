@@ -4,9 +4,7 @@ import {
 	DeleteCommand,
 	GetCommand,
 	PutCommand,
-	QueryCommand,
 	ScanCommand,
-	UpdateCommand,
 } from '@aws-sdk/lib-dynamodb';
 import { randomUUID } from 'node:crypto';
 import { config } from '../config.js';

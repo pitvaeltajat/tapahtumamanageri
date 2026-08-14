@@ -25,7 +25,7 @@ export function formatDate(iso: string): string {
 export function renderTextWithLinks(value: string): Array<string | { href: string; label: string }> {
 	if (!value) return [];
 
-	const urlRegex = /(https?:\/\/[^\s<>\"]+|(?:www\.)?[a-z0-9-]+(?:\.[a-z0-9-]+)+(?:[/?#][^\s<>\"]*)?)/gi;
+	const urlRegex = /(https?:\/\/[^\s<>"]+|(?:www\.)?[a-z0-9-]+(?:\.[a-z0-9-]+)+(?:[/?#][^\s<>"]*)?)/gi;
 	const parts: Array<string | { href: string; label: string }> = [];
 	let lastIndex = 0;
 
