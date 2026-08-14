@@ -106,7 +106,8 @@ export default function EventForm({ initial, submitLabel, onSubmit }: EventFormP
 			clickOpens: true,
 			allowInput: false,
 			onChange: handleDateRangeChange,
-			defaultDate: defaultDateRange,
+			// Open on the current day when no range is selected yet.
+			defaultDate: defaultDateRange ?? new Date(),
 		}) as FlatpickrInstance;
 
 		return () => fpInstance.current?.destroy();
@@ -171,24 +172,34 @@ export default function EventForm({ initial, submitLabel, onSubmit }: EventFormP
 				<input ref={dateInputRef} type='text' placeholder='Valitse ajanjakso' />
 			</label>
 
-			<label className='all-day-toggle'>
-				<input
-					type='checkbox'
-					checked={form.allDay}
-					onChange={(e) => handleAllDayChange(e.target.checked)}
-				/>
-				Koko päivä (ei alkamis- ja päättymisaikaa)
-			</label>
+			{sameDay && (
+				<label className='all-day-toggle'>
+					<input type='checkbox' checked={form.allDay} onChange={(e) => handleAllDayChange(e.target.checked)} />
+					Koko päivä (ei alkamis- ja päättymisaikaa)
+				</label>
+			)}
 
 			{sameDay && !form.allDay && (
 				<div className='form-row'>
 					<label className='form-row-item'>
 						Alkaa klo
-						<input type='time' lang='fi-FI' value={startTime} onChange={(e) => handleStartTimeChange(e.target.value)} required />
+						<input
+							type='time'
+							lang='fi-FI'
+							value={startTime}
+							onChange={(e) => handleStartTimeChange(e.target.value)}
+							required
+						/>
 					</label>
 					<label className='form-row-item'>
 						Loppuu klo
-						<input type='time' lang='fi-FI' value={endTime} onChange={(e) => handleEndTimeChange(e.target.value)} required />
+						<input
+							type='time'
+							lang='fi-FI'
+							value={endTime}
+							onChange={(e) => handleEndTimeChange(e.target.value)}
+							required
+						/>
 					</label>
 				</div>
 			)}
