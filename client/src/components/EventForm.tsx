@@ -53,7 +53,11 @@ export default function EventForm({ initial, submitLabel, onSubmit }: EventFormP
 	const [error, setError] = useState<string | null>(null);
 	const [submitting, setSubmitting] = useState(false);
 	const dateInputRef = useRef<HTMLInputElement | null>(null);
+	const startTimeRef = useRef<HTMLInputElement | null>(null);
+	const endTimeRef = useRef<HTMLInputElement | null>(null);
 	const fpInstance = useRef<FlatpickrInstance | null>(null);
+	const fpStartTime = useRef<FlatpickrInstance | null>(null);
+	const fpEndTime = useRef<FlatpickrInstance | null>(null);
 	const hasSyncedInitialDate = useRef(false);
 
 	const startDate = parseIsoDateTime(form.startsAt).date;
@@ -119,6 +123,49 @@ export default function EventForm({ initial, submitLabel, onSubmit }: EventFormP
 		hasSyncedInitialDate.current = true;
 	}, [defaultDateRange]);
 
+	// Initialize flatpickr time pickers (24-hour format, no AM/PM).
+	useEffect(() => {
+		if (startTimeRef.current) {
+			fpStartTime.current = flatpickr(startTimeRef.current, {
+				enableTime: true,
+				noCalendar: true,
+				dateFormat: 'H:i',
+				time_24hr: true,
+				locale: Finnish,
+				onChange: (selectedDates) => {
+					if (selectedDates[0]) handleStartTimeChange(selectedDates[0].toTimeString().slice(0, 5));
+				},
+			}) as FlatpickrInstance;
+		}
+		if (endTimeRef.current) {
+			fpEndTime.current = flatpickr(endTimeRef.current, {
+				enableTime: true,
+				noCalendar: true,
+				dateFormat: 'H:i',
+				time_24hr: true,
+				locale: Finnish,
+				onChange: (selectedDates) => {
+					if (selectedDates[0]) handleEndTimeChange(selectedDates[0].toTimeString().slice(0, 5));
+				},
+			}) as FlatpickrInstance;
+		}
+
+		return () => {
+			fpStartTime.current?.destroy();
+			fpEndTime.current?.destroy();
+		};
+	}, []);
+
+	// Keep the flatpickr time pickers in sync with the form values.
+	useEffect(() => {
+		if (fpStartTime.current && startTime) {
+			fpStartTime.current.setDate(startTime, false);
+		}
+		if (fpEndTime.current && endTime) {
+			fpEndTime.current.setDate(endTime, false);
+		}
+	}, [startTime, endTime]);
+
 	function handleStartTimeChange(value: string) {
 		const date = parseIsoDateTime(form.startsAt).date || parseIsoDateTime(form.endsAt).date;
 		if (!date) return;
@@ -183,23 +230,11 @@ export default function EventForm({ initial, submitLabel, onSubmit }: EventFormP
 				<div className='form-row'>
 					<label className='form-row-item'>
 						Alkaa klo
-						<input
-							type='time'
-							lang='fi-FI'
-							value={startTime}
-							onChange={(e) => handleStartTimeChange(e.target.value)}
-							required
-						/>
+						<input ref={startTimeRef} type='text' placeholder='--:--' readOnly />
 					</label>
 					<label className='form-row-item'>
 						Loppuu klo
-						<input
-							type='time'
-							lang='fi-FI'
-							value={endTime}
-							onChange={(e) => handleEndTimeChange(e.target.value)}
-							required
-						/>
+						<input ref={endTimeRef} type='text' placeholder='--:--' readOnly />
 					</label>
 				</div>
 			)}
