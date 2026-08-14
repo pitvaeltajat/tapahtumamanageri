@@ -25,7 +25,8 @@ export function formatDate(iso: string): string {
 export function renderTextWithLinks(value: string): Array<string | { href: string; label: string }> {
 	if (!value) return [];
 
-	const urlRegex = /(https?:\/\/[^\s<>"]+|(?:www\.)?[a-z0-9-]+(?:\.[a-z0-9-]+)+(?:[/?#][^\s<>"]*)?)/gi;
+	const urlRegex =
+		/(https?:\/\/[^\s<>"]+|(?:www\.)?[a-z0-9-]+(?:\.[a-z0-9-]+)+(?:[/?#][^\s<>"]*)?|[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,})/gi;
 	const parts: Array<string | { href: string; label: string }> = [];
 	let lastIndex = 0;
 
@@ -37,7 +38,9 @@ export function renderTextWithLinks(value: string): Array<string | { href: strin
 			parts.push(value.slice(lastIndex, index));
 		}
 
-		const href = /^https?:\/\//i.test(url) ? url : `https://${url}`;
+		// Email addresses get a mailto: link; everything else is a web URL.
+		const isEmail = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i.test(url);
+		const href = isEmail ? `mailto:${url}` : /^https?:\/\//i.test(url) ? url : `https://${url}`;
 		parts.push({ href, label: url });
 		lastIndex = index + url.length;
 	}
