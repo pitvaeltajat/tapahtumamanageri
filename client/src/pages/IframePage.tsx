@@ -59,7 +59,9 @@ export default function IframePage() {
 						<li key={event.id} className='iframe-event'>
 							<div className='iframe-body'>
 								<div className='iframe-title'>{event.title}</div>
-								<div className='iframe-date'>{formatIframeEventDate(event.startsAt, event.endsAt, event.allDay)}</div>
+								<div className='iframe-date'>
+									{formatIframeEventDate(event.startsAt, event.endsAt, event.allDay)}
+								</div>
 								{event.description && (
 									<div>
 										{renderTextWithLinks(event.description).map((part, index) =>

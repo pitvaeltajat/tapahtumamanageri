@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../api';
 import type { Event } from '../types';
-import { formatDateTime, renderTextWithLinks } from '../utils/format';
+import { formatIframeEventDate, renderTextWithLinks } from '../utils/format';
 
 export default function EventsPage() {
 	const [events, setEvents] = useState<Event[]>([]);
@@ -59,7 +59,7 @@ export default function EventsPage() {
 							<div className='event-card-main'>
 								<h2>{event.title}</h2>
 								<p className='event-time'>
-									{formatDateTime(event.startsAt)} – {formatDateTime(event.endsAt)}
+									{formatIframeEventDate(event.startsAt, event.endsAt, event.allDay)}
 								</p>
 								{event.description && (
 									<p>

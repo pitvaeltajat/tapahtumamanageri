@@ -1,16 +1,3 @@
-/** Format an ISO datetime string for display in Finnish locale. */
-export function formatDateTime(iso: string): string {
-	const date = new Date(iso);
-	if (Number.isNaN(date.getTime())) return iso;
-	return date.toLocaleString('fi-FI', {
-		day: '2-digit',
-		month: '2-digit',
-		year: 'numeric',
-		hour: '2-digit',
-		minute: '2-digit',
-	});
-}
-
 /** Format an ISO datetime string as a short date (for the iframe list). */
 export function formatDate(iso: string): string {
 	const date = new Date(iso);
@@ -61,9 +48,7 @@ export function formatEventDateRange(startsAt: string, endsAt: string): string {
 	}
 
 	const sameDay =
-		start.getFullYear() === end.getFullYear() &&
-		start.getMonth() === end.getMonth() &&
-		start.getDate() === end.getDate();
+		start.getFullYear() === end.getFullYear() && start.getMonth() === end.getMonth() && start.getDate() === end.getDate();
 
 	if (sameDay) {
 		return formatDate(startsAt);
@@ -105,9 +90,7 @@ export function formatIframeEventDate(startsAt: string, endsAt: string, allDay: 
 	}
 
 	const sameDay =
-		start.getFullYear() === end.getFullYear() &&
-		start.getMonth() === end.getMonth() &&
-		start.getDate() === end.getDate();
+		start.getFullYear() === end.getFullYear() && start.getMonth() === end.getMonth() && start.getDate() === end.getDate();
 
 	if (allDay && sameDay) {
 		return formatDate(startsAt);
