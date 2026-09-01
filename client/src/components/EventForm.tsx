@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import flatpickr from 'flatpickr';
 import { Finnish } from 'flatpickr/dist/l10n/fi.js';
 import 'flatpickr/dist/flatpickr.css';
-import type { EventData } from '../types';
+import { ORGANIZER_OPTIONS, type EventData } from '../types';
 import type { Instance as FlatpickrInstance } from 'flatpickr/dist/types/instance';
 
 interface EventFormProps {
@@ -17,6 +17,7 @@ const emptyForm: EventData = {
 	startsAt: '',
 	endsAt: '',
 	audience: '',
+	organizer: '',
 	registration: '',
 	additionalInfo: '',
 	allDay: false,
@@ -244,6 +245,18 @@ export default function EventForm({ initial, submitLabel, onSubmit }: EventFormP
 			<label>
 				Kenelle?
 				<input type='text' value={form.audience} onChange={(e) => update('audience', e.target.value)} />
+			</label>
+
+			<label>
+				Taho
+				<select value={form.organizer} onChange={(e) => update('organizer', e.target.value)}>
+					<option value=''>Valitse taho</option>
+					{ORGANIZER_OPTIONS.map((option) => (
+						<option key={option} value={option}>
+							{option}
+						</option>
+					))}
+				</select>
 			</label>
 
 			<label>

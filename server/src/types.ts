@@ -13,6 +13,8 @@ export interface EventData {
 	endsAt: string;
 	/** Kenelle? (audience) */
 	audience: string;
+	/** Taho (organizer) */
+	organizer: string;
 	/** Ilmoittautuminen (registration info) */
 	registration: string;
 	/** Lisätiedot (additional info) */

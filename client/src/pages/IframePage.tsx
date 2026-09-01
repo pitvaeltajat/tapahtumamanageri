@@ -80,10 +80,19 @@ export default function IframePage() {
 										)}
 									</div>
 								)}
-								{event.audience && <div>Kenelle: {event.audience}</div>}
+								{event.audience && (
+									<div>
+										<strong className='iframe-label'>Kenelle:</strong> {event.audience}
+									</div>
+								)}
+								{event.organizer && (
+									<div>
+										<strong className='iframe-label'>Taho:</strong> {event.organizer}
+									</div>
+								)}
 								{event.registration && (
 									<div>
-										Ilmoittautuminen:{' '}
+										<strong className='iframe-label'>Ilmoittautuminen:</strong>{' '}
 										{renderTextWithLinks(event.registration).map((part, index) =>
 											typeof part === 'string' ? (
 												<span key={`text-${index}`}>{part}</span>
@@ -102,7 +111,7 @@ export default function IframePage() {
 								)}
 								{event.additionalInfo && (
 									<div>
-										Lisätiedot:{' '}
+										<strong className='iframe-label'>Lisätiedot:</strong>{' '}
 										{renderTextWithLinks(event.additionalInfo).map((part, index) =>
 											typeof part === 'string' ? (
 												<span key={`text-${index}`}>{part}</span>

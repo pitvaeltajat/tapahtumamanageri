@@ -80,6 +80,7 @@ export default function EventsPage() {
 									</p>
 								)}
 								{event.audience && <p>Kenelle: {event.audience}</p>}
+								{event.organizer && <p>Taho: {event.organizer}</p>}
 								{event.registration && (
 									<p>
 										Ilmoittautuminen:{' '}

@@ -191,6 +191,7 @@ body {
 }
 
 .event-form input,
+.event-form select,
 .event-form textarea {
 	font: inherit;
 	padding: 0.5rem 0.6rem;
@@ -200,6 +201,7 @@ body {
 }
 
 .event-form input:focus,
+.event-form select:focus,
 .event-form textarea:focus {
 	outline: 2px solid var(--color-primary);
 	outline-offset: -1px;
@@ -419,6 +421,10 @@ body {
 	white-space: normal;
 	overflow-wrap: anywhere;
 	line-height: 1.4;
+}
+
+.iframe-label {
+	font-weight: 700;
 }
 
 .iframe-time {

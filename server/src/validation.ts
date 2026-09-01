@@ -7,6 +7,7 @@ export const eventSchema = z.object({
 	startsAt: z.string().min(1, 'Alkamisaika on pakollinen'),
 	endsAt: z.string().min(1, 'Päättymisaika on pakollinen'),
 	audience: z.string().default(''),
+	organizer: z.string().default(''),
 	registration: z.string().default(''),
 	additionalInfo: z.string().default(''),
 	allDay: z.boolean().default(false),

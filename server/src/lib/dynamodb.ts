@@ -19,6 +19,7 @@ function toEvent(item: Record<string, unknown>): Event {
 		startsAt: item.startsAt as string,
 		endsAt: item.endsAt as string,
 		audience: (item.audience as string) ?? '',
+		organizer: (item.organizer as string) ?? '',
 		registration: (item.registration as string) ?? '',
 		additionalInfo: (item.additionalInfo as string) ?? '',
 		allDay: (item.allDay as boolean) ?? false,

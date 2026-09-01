@@ -134,6 +134,7 @@ function buildEventResource(data: EventData) {
 	const description = [
 		data.description,
 		data.audience ? `Kenelle: ${data.audience}` : '',
+		data.organizer ? `Taho: ${data.organizer}` : '',
 		data.registration ? `Ilmoittautuminen: ${data.registration}` : '',
 		data.additionalInfo ? `Lisätiedot: ${data.additionalInfo}` : '',
 	]
