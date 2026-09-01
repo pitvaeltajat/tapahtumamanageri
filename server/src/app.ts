@@ -3,7 +3,7 @@ import cors from 'cors';
 import { existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
-import { getSession, requireAuth } from './lib/auth.js';
+import { getSession, readSharedSession, requireAuth } from './lib/auth.js';
 import * as db from './lib/dynamodb.js';
 import * as calendar from './lib/calendar.js';
 import { eventSchema } from './validation.js';
@@ -80,8 +80,17 @@ export function createApp(): express.Express {
 
 	/** GET /api/auth - check whether the current session is authenticated. */
 	app.get('/api/auth', async (req, res) => {
+		// The shared pitva.fi cookie counts, exactly as it does in requireAuth.
+		// Without this the client would keep showing the password prompt to a
+		// member the API is already accepting.
+		const shared = await readSharedSession(req);
+		if (shared) {
+			res.json({ isLoggedIn: true, email: shared.email, via: 'pitva' });
+			return;
+		}
+
 		const session = await getSession(req, res);
-		res.json({ isLoggedIn: session.isLoggedIn === true });
+		res.json({ isLoggedIn: session.isLoggedIn === true, via: 'password' });
 	});
 
 	/** GET /api/events - list all events sorted by start time (public). */
