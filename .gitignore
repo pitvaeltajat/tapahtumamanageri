@@ -7,3 +7,5 @@ build/
 .DS_Store
 .vscode/
 service-account-key.json
+.vercel
+.env*

@@ -13,10 +13,14 @@ export interface SessionData {
  *
  * The name is not cosmetic: @auth/core derives the JWE decryption key with
  * HKDF salted by this exact string, so it doubles as the `salt` argument
- * below. It has to match the `cookies.sessionToken.name` those two apps
- * configure, character for character, or nothing here decrypts.
+ * below. It has to match the `cookies.sessionToken.name` those apps configure,
+ * character for character, or nothing here decrypts.
+ *
+ * Deliberately not Auth.js's default `__Secure-authjs.session-token`: Klapi and
+ * Budu already had host-scoped cookies under that name, and reusing it for the
+ * domain-scoped one left users holding two cookies with a single name.
  */
-const SHARED_COOKIE = '__Secure-authjs.session-token';
+const SHARED_COOKIE = '__Secure-pitva.session-token';
 
 /** The claims this app cares about; the rest are Klapi's and Budu's own. */
 interface SharedClaims {
