@@ -23,9 +23,20 @@ export default function Layout() {
 	return (
 		<div className='layout'>
 			<header className='header'>
-				<Link to='/' className='brand'>
-					Tapahtumaluoja
-				</Link>
+				<div className='brand-group'>
+					<Link to='/' className='brand'>
+						Tapahtumaluoja
+					</Link>
+					{/* Back to the front door. A plain <a> and not a router Link:
+					    it leaves the app for another origin. */}
+					<a
+						className='uplink'
+						href='https://atk.pitva.fi'
+						title='Kaikki PitVan palvelut'
+					>
+						← ATK
+					</a>
+				</div>
 
 				<nav className='nav'>
 					<div className={`nav-inner${navOpen ? ' open' : ''}`}>

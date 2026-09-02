@@ -44,12 +44,36 @@ body {
 	gap: 1rem;
 }
 
+/* The wordmark and the way back out, grouped so the header's space-between
+   still distributes three things — brand end, nav, hamburger — not four. */
+.brand-group {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	min-width: 0;
+}
+
 .brand {
 	min-width: 0;
 	font-weight: 700;
 	font-size: 1.1rem;
 	color: var(--color-primary);
 	text-decoration: none;
+}
+
+/* Quieter than the wordmark: this is the exit, not the identity. Stays visible
+   signed out, which is when it is most useful — atk.pitva.fi is where the
+   sign-in happens. */
+.uplink {
+	font-size: 0.85rem;
+	color: var(--color-muted);
+	text-decoration: none;
+	white-space: nowrap;
+}
+
+.uplink:hover {
+	text-decoration: underline;
+	text-underline-offset: 3px;
 }
 
 .nav {
@@ -441,9 +465,12 @@ body {
 		gap: 0.5rem;
 	}
 
+	.brand-group {
+		flex: 1 1 auto;
+	}
+
 	.brand {
 		font-size: 1rem;
-		flex: 1 1 auto;
 	}
 
 	.nav {
