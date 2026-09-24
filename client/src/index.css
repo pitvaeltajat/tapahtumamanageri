@@ -65,15 +65,33 @@ body {
    signed out, which is when it is most useful — atk.pitva.fi is where the
    sign-in happens. */
 .uplink {
-	font-size: 0.85rem;
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	height: 28px;
+	padding: 0 11px;
+	border: 1px solid var(--color-border);
+	border-radius: 999px;
 	color: var(--color-muted);
+	font-size: 13px;
+	font-weight: 500;
+	letter-spacing: 0.02em;
 	text-decoration: none;
 	white-space: nowrap;
+	transition:
+		background 0.15s ease,
+		border-color 0.15s ease,
+		color 0.15s ease;
 }
 
 .uplink:hover {
-	text-decoration: underline;
-	text-underline-offset: 3px;
+	border-color: var(--color-primary);
+	background: color-mix(in srgb, var(--color-primary) 6%, transparent);
+	color: var(--color-primary);
+}
+
+.uplink svg {
+	flex: none;
 }
 
 .nav {
@@ -465,8 +483,11 @@ body {
 		gap: 0.5rem;
 	}
 
+	/* Holds its width: the nav beside it is 100% wide but empty here (its
+	   links live in the drawer), and would otherwise squeeze the wordmark
+	   into the ATK pill. */
 	.brand-group {
-		flex: 1 1 auto;
+		flex: none;
 	}
 
 	.brand {

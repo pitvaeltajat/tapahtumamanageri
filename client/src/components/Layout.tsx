@@ -28,13 +28,31 @@ export default function Layout() {
 						Tapahtumaluoja
 					</Link>
 					{/* Back to the front door. A plain <a> and not a router Link:
-					    it leaves the app for another origin. */}
+					    it leaves the app for another origin. The pill and Lucide's
+					    LayoutGrid match Budu and Klapi: "all services", not "back". */}
 					<a
 						className='uplink'
 						href='https://atk.pitva.fi'
 						title='Kaikki PitVan palvelut'
 					>
-						← ATK
+						<svg
+							viewBox='0 0 24 24'
+							width='13'
+							height='13'
+							fill='none'
+							stroke='currentColor'
+							strokeWidth='2.25'
+							strokeLinecap='round'
+							strokeLinejoin='round'
+							aria-hidden='true'
+							focusable='false'
+						>
+							<rect width='7' height='7' x='3' y='3' rx='1' />
+							<rect width='7' height='7' x='14' y='3' rx='1' />
+							<rect width='7' height='7' x='14' y='14' rx='1' />
+							<rect width='7' height='7' x='3' y='14' rx='1' />
+						</svg>
+						ATK
 					</a>
 				</div>
 
