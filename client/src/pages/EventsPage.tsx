@@ -9,7 +9,7 @@ export default function EventsPage() {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
-	const [showIncomingOnly, setShowIncomingOnly] = useState(false);
+	const [showIncomingOnly, setShowIncomingOnly] = useState(true);
 	const navigate = useNavigate();
 
 	useEffect(() => {
