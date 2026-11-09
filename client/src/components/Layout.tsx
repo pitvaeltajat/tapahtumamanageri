@@ -32,7 +32,7 @@ export default function Layout() {
 					    LayoutGrid match Budu and Klapi: "all services", not "back". */}
 					<a
 						className='uplink'
-						href='https://atk.pitva.fi'
+						href='https://kompassi.pitva.fi'
 						title='Kaikki PitVan palvelut'
 					>
 						<svg
@@ -52,7 +52,7 @@ export default function Layout() {
 							<rect width='7' height='7' x='14' y='14' rx='1' />
 							<rect width='7' height='7' x='3' y='14' rx='1' />
 						</svg>
-						ATK
+						Kompassi
 					</a>
 				</div>
 

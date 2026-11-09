@@ -68,7 +68,7 @@ body {
 }
 
 /* Quieter than the wordmark: this is the exit, not the identity. Stays visible
-   signed out, which is when it is most useful — atk.pitva.fi is where the
+   signed out, which is when it is most useful — kompassi.pitva.fi is where the
    sign-in happens. */
 .uplink {
   display: inline-flex;
@@ -498,7 +498,7 @@ body {
 
   /* Holds its width: the nav beside it is 100% wide but empty here (its
 	   links live in the drawer), and would otherwise squeeze the wordmark
-	   into the ATK pill. */
+	   into the Kompassi pill. */
   .brand-group {
     flex: none;
   }
